@@ -23,7 +23,10 @@ document.addEventListener("DOMContentLoaded", async () => {
   const selectedGrid = document.getElementById("selected-grid");
   if (selectedGrid) {
     const products = await api.getProducts();
-    selectedGrid.innerHTML = products.slice(0, 8).map(productCard).join("");
+    selectedGrid.innerHTML = products
+      .slice(0, 8)
+      .map((p) => productCard(p, { hideSoldOut: true }))
+      .join("");
     fillPlaceholderArt(selectedGrid);
   }
 });
