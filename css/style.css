@@ -89,6 +89,7 @@ img { max-width: 100%; display: block; }
    just sit right on top of the header's border-bottom as a redundant
    second line. */
 body[data-page="home"] .frame { margin-top: 0; border-top: none; }
+body[data-page="lookbook"] .frame { border-top: none; }
 
 /* ==========================================================
    Header
@@ -283,6 +284,20 @@ body[data-page="home"] .frame { margin-top: 0; border-top: none; }
   border-right: none;
   color: var(--ink);
 }
+/* short description under a .section-title, tight to the title above it */
+.section-subtext {
+  margin-top: 8px;
+  font-size: 12px;
+  line-height: 1.7;
+  color: var(--ink);
+  max-width: 480px;
+}
+/* lookbook.html's title only — a tighter 24px gap under the header
+   (vs. the usual 56px), and reads bigger than the plain section-title
+   default since it's carrying a subtitle underneath it */
+.frame:has(.lookbook-header) { margin-top: 24px; }
+.lookbook-header .section-title { font-size: 24px; }
+.lookbook-header { padding-bottom: 30px; } /* + 2px border = 32px to the grid below */
 
 /* ==========================================================
    our vision
