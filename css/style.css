@@ -23,6 +23,10 @@ html, body {
   color: var(--ink);
   font-family: var(--font-kr);
 }
+/* space for the fixed header — refined to the header's real measured
+   height by initHeaderScroll() in layout.js; this is just the fallback
+   used for the first paint before that JS runs */
+body { padding-top: var(--header-h, 70px); }
 
 a { color: inherit; text-decoration: none; }
 button { font-family: inherit; }
@@ -37,7 +41,10 @@ img { max-width: 100%; display: block; }
   max-width: 1600px; /* cap so ultra-wide monitors don't over-stretch content */
   margin: 32px auto;
   background: var(--bg);
-  overflow: hidden;
+  /* no overflow:hidden here — it would become the containing block for any
+     position:sticky descendant (e.g. the product-detail buy panel) and
+     break the stick-to-viewport behavior, since .frame itself never
+     scrolls independently. Children that need clipping set their own. */
 }
 @media (max-width: 700px) {
   .frame { width: calc(100% - 32px); margin: 16px auto; }
@@ -47,13 +54,21 @@ img { max-width: 100%; display: block; }
    Header
    ========================================================== */
 .site-header {
-  position: relative;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 18px 24px;
+  background: var(--bg);
   border-bottom: 2px solid var(--ink);
+  transform: translateY(0);
+  transition: transform 0.3s ease;
 }
+.site-header.header-hidden { transform: translateY(-100%); }
 .logo {
   font-family: var(--font-en);
   font-weight: 700;
@@ -402,21 +417,44 @@ img { max-width: 100%; display: block; }
   color: var(--muted-2);
   border-bottom: 2px solid var(--ink);
 }
-.detail-grid {
+/* ---- two-column layout: scrolling image gallery + sticky buy panel ---- */
+.pd-layout {
   display: grid;
-  grid-template-columns: 1.1fr 1fr;
+  grid-template-columns: 1.2fr 1fr;
   border-bottom: 2px solid var(--ink);
 }
-.detail-photo {
+.pd-gallery {
   border-right: 1px solid var(--ink);
-  height: 380px;
+}
+.pd-shot {
+  border-bottom: 1px solid var(--ink);
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.pd-shot.is-visible { opacity: 1; transform: translateY(0); }
+.pd-gallery > .pd-shot:last-child { border-bottom: none; }
+.pd-shot-caption { padding: 16px 20px 0; font-size: 12px; font-weight: 600; }
+.pd-shot-photo {
+  height: 560px;
   background: #fff;
+  margin-top: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
 }
-.detail-photo img { width: 100%; height: 100%; object-fit: cover; }
-.detail-info { padding: 28px 26px; display: flex; flex-direction: column; }
+.pd-shot-photo img { width: 100%; height: 100%; object-fit: cover; }
+.pd-shot-main .pd-shot-photo { height: 640px; margin-top: 0; }
+.pd-shot-detail .pd-shot-photo { height: 420px; }
+
+.pd-info-inner {
+  position: sticky;
+  top: 32px;
+  padding: 28px 26px;
+  display: flex;
+  flex-direction: column;
+}
 .detail-category { font-family: var(--font-en); font-size: 12px; letter-spacing: 1px; color: var(--muted-2); }
 .detail-name { font-size: 34px; font-weight: 700; margin-top: 8px; }
 .detail-price { font-family: var(--font-num); font-size: 16px; margin-top: 6px; }
@@ -433,42 +471,55 @@ img { max-width: 100%; display: block; }
 .detail-actions .btn { flex: 1; }
 
 @media (max-width: 800px) {
-  .detail-grid { grid-template-columns: 1fr; }
-  .detail-photo { border-right: none; border-bottom: 1px solid var(--ink); height: 300px; }
+  .pd-layout { grid-template-columns: 1fr; }
+  .pd-gallery { border-right: none; border-bottom: 1px solid var(--ink); }
+  .pd-shot-main .pd-shot-photo { height: 420px; }
+  .pd-shot-detail .pd-shot-photo { height: 300px; }
+  .pd-info-inner { position: static; top: auto; padding: 24px; }
 }
 
-.spec-row {
+/* ---- spec / shipping accordion, inside the sticky panel ---- */
+.pd-accordion { margin-top: 28px; border-top: 1px solid var(--ink); }
+.acc-item { border-bottom: 1px solid var(--ink); }
+.acc-trigger {
+  width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 14px 24px;
-  border-bottom: 1px solid var(--ink);
+  padding: 14px 2px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-en);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  color: var(--ink);
 }
-.spec-row .label { font-size: 12px; font-weight: 600; }
-.spec-row .value { font-family: var(--font-num); font-size: 12px; color: var(--muted); }
-
-.details-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  border-bottom: 2px solid var(--ink);
+.acc-icon { position: relative; width: 11px; height: 11px; flex-shrink: 0; }
+.acc-icon::before,
+.acc-icon::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  background: var(--ink);
+  transform: translate(-50%, -50%);
+  transition: transform 0.2s ease;
 }
-.details-cell { border-right: 1px solid var(--ink); }
-.details-grid > .details-cell:last-child { border-right: none; }
-.details-caption { padding: 12px 16px 0; font-size: 12px; font-weight: 600; }
-.details-photo {
-  height: 180px;
-  background: #fff;
-  margin-top: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.acc-icon::before { width: 11px; height: 1px; }
+.acc-icon::after { width: 1px; height: 11px; }
+.acc-item.is-open .acc-icon::after { transform: translate(-50%, -50%) scaleY(0); }
+.acc-panel {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
 }
-.details-photo img { width: 100%; height: 100%; object-fit: cover; }
-@media (max-width: 700px) {
-  .details-grid { grid-template-columns: 1fr; }
-  .details-cell { border-right: none; border-bottom: 1px solid var(--ink); }
-  .details-grid > .details-cell:last-child { border-bottom: none; }
-}
+.acc-panel-inner { padding: 0 2px 16px; }
+.acc-row { display: flex; justify-content: space-between; padding: 4px 0; font-size: 12px; }
+.acc-row .label { color: var(--muted); }
+.acc-row .value { font-family: var(--font-num); }
+.acc-text { font-size: 12px; line-height: 1.8; color: var(--muted); }
 
 /* ==========================================================
    Product list / category page

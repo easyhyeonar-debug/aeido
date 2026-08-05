@@ -39,39 +39,122 @@ function updateQtyDisplay() {
   document.getElementById("qty-plus").disabled = currentQty >= max;
 }
 
-function renderSpecRows(p) {
-  const el = document.getElementById("spec-rows");
-  const rows = [
-    ["소재", p.material],
-    ["무게", p.weight],
-    ["사이즈", p.size],
-  ];
-  el.innerHTML = rows
-    .map(
-      ([label, value]) => `
-      <div class="spec-row">
-        <span class="label">${label}</span>
-        <span class="value">${value}</span>
-      </div>`
-    )
-    .join("");
-}
+/*
+  renderGallery — builds the left-hand image column: the main product
+  shot followed by the close-up detail shots, stacked full-width (the
+  gentlemonster.com PDP pattern this is modeled on: a long scrolling
+  photo column next to a buy panel that stays pinned in view).
+*/
+function renderGallery(p) {
+  const gallery = document.getElementById("pd-gallery");
 
-function renderDetailShots(p) {
-  const grid = document.getElementById("details-grid");
-  grid.innerHTML = (p.detail_shots || [])
+  const mainShot = `
+    <div class="pd-shot pd-shot-main">
+      <div class="pd-shot-photo" id="detail-photo"></div>
+    </div>`;
+
+  const detailShots = (p.detail_shots || [])
     .map(
       (shot) => `
-      <div class="details-cell">
-        <div class="details-caption">${shot.caption}</div>
-        <div class="details-photo" data-shape="${shot.shape_key}"></div>
+      <div class="pd-shot pd-shot-detail">
+        <div class="pd-shot-caption">${shot.caption}</div>
+        <div class="pd-shot-photo" data-shape="${shot.shape_key}"></div>
       </div>`
     )
     .join("");
 
-  grid.querySelectorAll(".details-photo").forEach((el) => {
+  gallery.innerHTML = mainShot + detailShots;
+
+  const photoEl = document.getElementById("detail-photo");
+  if (p.list_image) {
+    photoEl.innerHTML = `<img src="${p.list_image}" alt="${p.product_name}">`;
+  } else {
+    renderProductArt(photoEl, p.shape_key, !!p.tinted);
+    photoEl.querySelector("svg").setAttribute("width", "45%");
+  }
+
+  gallery.querySelectorAll(".pd-shot-detail .pd-shot-photo").forEach((el) => {
     if (el.querySelector("img")) return;
     renderProductArt(el, el.dataset.shape, false);
+  });
+
+  initGalleryReveal(gallery);
+}
+
+/*
+  initGalleryReveal — fades/rises each shot into place as it enters the
+  viewport while scrolling, instead of everything just being visible on
+  load. Purely a polish detail; falls back to instantly visible if
+  IntersectionObserver isn't available.
+*/
+function initGalleryReveal(gallery) {
+  const shots = gallery.querySelectorAll(".pd-shot");
+  if (!("IntersectionObserver" in window)) {
+    shots.forEach((el) => el.classList.add("is-visible"));
+    return;
+  }
+  const io = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("is-visible");
+          io.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.15, rootMargin: "0px 0px -60px 0px" }
+  );
+  shots.forEach((el) => io.observe(el));
+}
+
+/*
+  renderAccordion — spec info + shipping note as collapsible sections
+  in the sticky buy panel, expand/collapse animated via max-height.
+*/
+function renderAccordion(p) {
+  const el = document.getElementById("pd-accordion");
+  const sections = [
+    {
+      title: "SPECIFICATION",
+      open: true,
+      body: `
+        <div class="acc-row"><span class="label">소재</span><span class="value">${p.material}</span></div>
+        <div class="acc-row"><span class="label">무게</span><span class="value">${p.weight}</span></div>
+        <div class="acc-row"><span class="label">사이즈</span><span class="value">${p.size}</span></div>
+      `,
+    },
+    {
+      title: "무료 배송 & 반품",
+      open: false,
+      body: `<p class="acc-text">전 상품 무료 배송으로 발송되며, 수령 후 7일 이내 미착용 상품에 한해 무료 반품이 가능합니다.</p>`,
+    },
+  ];
+
+  el.innerHTML = sections
+    .map(
+      (s, i) => `
+      <div class="acc-item ${s.open ? "is-open" : ""}" data-index="${i}">
+        <button type="button" class="acc-trigger">
+          <span>${s.title}</span>
+          <span class="acc-icon"></span>
+        </button>
+        <div class="acc-panel">
+          <div class="acc-panel-inner">${s.body}</div>
+        </div>
+      </div>`
+    )
+    .join("");
+
+  el.querySelectorAll(".acc-item").forEach((item) => {
+    const trigger = item.querySelector(".acc-trigger");
+    const panel = item.querySelector(".acc-panel");
+    if (item.classList.contains("is-open")) {
+      panel.style.maxHeight = panel.scrollHeight + "px";
+    }
+    trigger.addEventListener("click", () => {
+      const isOpen = item.classList.toggle("is-open");
+      panel.style.maxHeight = isOpen ? panel.scrollHeight + "px" : "0px";
+    });
   });
 }
 
@@ -97,7 +180,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const product = await api.getProduct(id);
 
   if (!product) {
-    document.querySelector(".detail-grid").innerHTML =
+    document.querySelector(".pd-layout").innerHTML =
       '<div class="empty-state">상품을 찾을 수 없습니다. <a href="products.html">전체 상품 보기 &#8594;</a></div>';
     return;
   }
@@ -111,22 +194,14 @@ document.addEventListener("DOMContentLoaded", async () => {
   document.getElementById("breadcrumb").textContent =
     `HOME / ${categoryName(product.category_no).toUpperCase()} / ${product.product_name.toUpperCase()}`;
 
-  const photoEl = document.getElementById("detail-photo");
-  if (product.list_image) {
-    photoEl.innerHTML = `<img src="${product.list_image}" alt="${product.product_name}">`;
-  } else {
-    renderProductArt(photoEl, product.shape_key, !!product.tinted);
-    photoEl.querySelector("svg").setAttribute("width", "55%");
-  }
-
   document.getElementById("detail-category").textContent = categoryName(product.category_no).toUpperCase();
   document.getElementById("detail-name").textContent = product.product_name;
   document.getElementById("detail-price").textContent = moneyKRW(product.price);
   document.getElementById("detail-desc").textContent = product.summary_description;
 
+  renderGallery(product);
   renderLensColors(product);
-  renderSpecRows(product);
-  renderDetailShots(product);
+  renderAccordion(product);
   renderRelated(product.product_no);
 
   const soldOut = product.quantity <= 0;
