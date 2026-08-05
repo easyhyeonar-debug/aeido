@@ -2,7 +2,11 @@
   content.js
   ------------------------------------------------------------------
   Marketing copy + image paths that are NOT product data — the home
-  hero photo, the "our vision" copy, and the 4 lookbook photos.
+  hero photo and the "our vision" copy. (Lookbook stories live in
+  data.js/LOOKBOOK now, since each one needs more structure — a
+  detail-page id, an editorial photo spread, related products — than
+  a flat "marketing copy" object, and are read through api.js like
+  everything else in js/data.js.)
 
   To swap a photo: drop a file into the images/ folder using the
   same filename referenced below and it will appear automatically —
@@ -23,10 +27,4 @@ const CONTENT = {
       "세상에 완벽한 안경은 없습니다. 당신 얼굴에 자연스럽게 맞아가는 형태가 있을 뿐입니다.<br>" +
       "aeido는 당신에게 꼭 맞는, 당신만의 원형 하나를 만듭니다.",
   },
-  lookbook: [
-    { image: "images/lookbook-1.jpg", caption: "2026 Collection", tone: "tone-dark1" },
-    { image: "images/lookbook-2.jpg", caption: "Bestseller", tone: "tone-dark2" },
-    { image: "images/lookbook-3.jpg", caption: "Sunglasses", tone: "tone-dark3" },
-    { image: "images/lookbook-4.jpg", caption: "Glasses", tone: "tone-light1" },
-  ],
 };

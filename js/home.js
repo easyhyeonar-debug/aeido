@@ -8,14 +8,16 @@ document.addEventListener("DOMContentLoaded", async () => {
     hero.style.backgroundImage = `url('${CONTENT.hero.image}')`;
   }
 
-  const grid = document.getElementById("lookbook-grid");
-  if (grid) {
-    grid.innerHTML = CONTENT.lookbook
+  const lookbookGrid = document.getElementById("lookbook-grid");
+  if (lookbookGrid) {
+    const stories = await api.getLookbook();
+    lookbookGrid.innerHTML = stories
+      .slice(0, 4)
       .map(
         (item) => `
-        <div class="lookbook-tile ${item.tone}" style="background-image:url('${item.image}')">
-          <span class="lookbook-caption">${item.caption}</span>
-        </div>`
+        <a class="lookbook-tile ${item.tone}" href="lookbook-detail.html?id=${item.id}" style="background-image:url('${item.cover_image}')">
+          <span class="lookbook-caption">${item.label}</span>
+        </a>`
       )
       .join("");
   }

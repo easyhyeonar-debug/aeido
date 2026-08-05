@@ -32,3 +32,29 @@ function fillPlaceholderArt(root) {
     renderProductArt(el, shape, tinted);
   });
 }
+
+/*
+  initScrollReveal — fades/rises each element in as it scrolls into
+  view (pair with the .reveal-on-scroll CSS class). Used by the
+  product-detail gallery and the lookbook-detail editorial spread.
+  Falls back to instantly visible if IntersectionObserver isn't
+  available.
+*/
+function initScrollReveal(elements) {
+  if (!("IntersectionObserver" in window)) {
+    elements.forEach((el) => el.classList.add("is-visible"));
+    return;
+  }
+  const io = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("is-visible");
+          io.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.15, rootMargin: "0px 0px -60px 0px" }
+  );
+  elements.forEach((el) => io.observe(el));
+}
