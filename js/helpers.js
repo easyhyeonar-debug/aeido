@@ -6,11 +6,12 @@ function moneyKRW(n) {
   return "₩" + Number(n).toLocaleString("en-US");
 }
 
-function productCard(p) {
+function productCard(p, opts = {}) {
   const photo = p.list_image
     ? `<img src="${p.list_image}" alt="${p.product_name}">`
     : "";
   const soldOut = p.quantity <= 0;
+  const showSoldOut = soldOut && !opts.hideSoldOut;
   return `
     <a class="product-cell" href="product.html?id=${p.product_no}">
       <div class="product-photo" data-shape="${p.shape_key}" data-tinted="${!!p.tinted}">${photo}</div>
@@ -18,7 +19,7 @@ function productCard(p) {
         <span class="product-name">${p.product_name}</span>
         <span class="product-price">${moneyKRW(p.price)}</span>
       </div>
-      ${soldOut ? `<div class="product-soldout">SOLD OUT</div>` : ""}
+      ${showSoldOut ? `<div class="product-soldout">SOLD OUT</div>` : ""}
     </a>
   `;
 }
