@@ -3,33 +3,29 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Aeido — Shop</title>
+<title>Aeido — Lookbook</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,600;0,700;1,400&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@latest/dist/web/static/pretendard.css">
 <link rel="stylesheet" href="css/style.css">
 </head>
-<body data-page="">
+<body data-page="lookbook">
 
 <div class="frame">
   <header id="site-header" class="site-header"></header>
 
-  <div class="filter-bar">
-    <div class="filter-tabs" id="filter-tabs">
-      <button data-category="">ALL</button>
-      <button data-category="1">GLASSES</button>
-      <button data-category="2">SUNGLASSES</button>
-    </div>
-    <select class="sort-select" id="sort-select">
-      <option value="">NEWEST</option>
-      <option value="price_asc">PRICE — LOW TO HIGH</option>
-      <option value="price_desc">PRICE — HIGH TO LOW</option>
-    </select>
+  <div class="section-header">
+    <span class="section-title">Lookbook</span>
   </div>
 
-  <div class="product-grid product-grid--square" id="product-grid"></div>
-  <div class="empty-state" id="empty-state" style="display:none;">조건에 맞는 상품이 없습니다.</div>
+  <div class="vision">
+    <div class="vision-text">
+      계절마다 새로 채워지는 aeido의 룩. 이미지를 눌러 해당 컬렉션의 상품을 바로 둘러보세요.
+    </div>
+  </div>
+
+  <div class="lookbook-grid" id="lookbook-grid"></div>
 
   <footer id="site-footer"></footer>
 </div>
@@ -42,6 +38,6 @@
 <script src="js/api.js"></script>
 <script src="js/cart.js"></script>
 <script src="js/layout.js"></script>
-<script src="js/products.js"></script>
+<script src="js/lookbook.js"></script>
 </body>
 </html>

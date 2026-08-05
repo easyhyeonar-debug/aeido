@@ -195,9 +195,146 @@ const PRODUCTS = [
   },
 ];
 
+/*
+  LOOKBOOK — editorial "stories" shown on lookbook.html and each one's
+  own lookbook-detail.html?id=<id> page. `category_no` tells the detail
+  page which products to show under "Shop the look" (null = a general
+  mix, same as the home page's Selected grid). `photos` is the
+  magazine-style spread on the detail page — "full" spans the full
+  width, "half" pairs two photos side by side.
+
+  Like the product photos, `cover_image` / each photo's `image` quietly
+  fall back to a solid color block (`tone`) until real photography is
+  dropped into images/lookbook/ using these filenames.
+*/
 const LOOKBOOK = [
-  { label: "2026 Collection", tone: "dark1" },
-  { label: "Bestseller", tone: "dark2" },
-  { label: "Sunglasses", tone: "dark3" },
-  { label: "Glasses", tone: "light1" },
+  {
+    id: "2026-collection",
+    label: "2026 Collection",
+    tone: "tone-dark1",
+    cover_image: "images/lookbook/2026-collection-cover.jpg",
+    category_no: null,
+    description:
+      "새로운 계절, 새로운 원형. 2026년 aeido가 제안하는 실루엣과 소재를 한 화보에 담았습니다.",
+    photos: [
+      { image: "images/lookbook/2026-collection-1.jpg", tone: "tone-dark1", size: "full" },
+      { image: "images/lookbook/2026-collection-2.jpg", tone: "tone-dark2", size: "half" },
+      { image: "images/lookbook/2026-collection-3.jpg", tone: "tone-light1", size: "half" },
+      { image: "images/lookbook/2026-collection-4.jpg", tone: "tone-dark3", size: "full" },
+      { image: "images/lookbook/2026-collection-5.jpg", tone: "tone-dark1", size: "half" },
+      { image: "images/lookbook/2026-collection-6.jpg", tone: "tone-dark2", size: "half" },
+    ],
+  },
+  {
+    id: "bestseller",
+    label: "Bestseller",
+    tone: "tone-dark2",
+    cover_image: "images/lookbook/bestseller-cover.jpg",
+    category_no: null,
+    description: "가장 많이 사랑받은 프레임들. 이유가 있는 스테디셀러를 모았습니다.",
+    photos: [
+      { image: "images/lookbook/bestseller-1.jpg", tone: "tone-dark2", size: "full" },
+      { image: "images/lookbook/bestseller-2.jpg", tone: "tone-light1", size: "half" },
+      { image: "images/lookbook/bestseller-3.jpg", tone: "tone-dark1", size: "half" },
+      { image: "images/lookbook/bestseller-4.jpg", tone: "tone-dark3", size: "full" },
+      { image: "images/lookbook/bestseller-5.jpg", tone: "tone-dark2", size: "half" },
+      { image: "images/lookbook/bestseller-6.jpg", tone: "tone-light1", size: "half" },
+    ],
+  },
+  {
+    id: "sunglasses-story",
+    label: "Sunglasses",
+    tone: "tone-dark3",
+    cover_image: "images/lookbook/sunglasses-cover.jpg",
+    category_no: 2,
+    description: "강한 볕 아래에서 더 선명해지는 표정. aeido 선글라스 컬렉션.",
+    photos: [
+      { image: "images/lookbook/sunglasses-1.jpg", tone: "tone-dark3", size: "full" },
+      { image: "images/lookbook/sunglasses-2.jpg", tone: "tone-dark1", size: "half" },
+      { image: "images/lookbook/sunglasses-3.jpg", tone: "tone-dark2", size: "half" },
+      { image: "images/lookbook/sunglasses-4.jpg", tone: "tone-light1", size: "full" },
+      { image: "images/lookbook/sunglasses-5.jpg", tone: "tone-dark3", size: "half" },
+      { image: "images/lookbook/sunglasses-6.jpg", tone: "tone-dark1", size: "half" },
+    ],
+  },
+  {
+    id: "glasses-story",
+    label: "Glasses",
+    tone: "tone-light1",
+    cover_image: "images/lookbook/glasses-cover.jpg",
+    category_no: 1,
+    description: "매일 쓰는 얼굴의 일부. 가볍고 단단한 데일리 안경 컬렉션.",
+    photos: [
+      { image: "images/lookbook/glasses-1.jpg", tone: "tone-light1", size: "full" },
+      { image: "images/lookbook/glasses-2.jpg", tone: "tone-dark2", size: "half" },
+      { image: "images/lookbook/glasses-3.jpg", tone: "tone-dark3", size: "half" },
+      { image: "images/lookbook/glasses-4.jpg", tone: "tone-dark1", size: "full" },
+      { image: "images/lookbook/glasses-5.jpg", tone: "tone-light1", size: "half" },
+      { image: "images/lookbook/glasses-6.jpg", tone: "tone-dark2", size: "half" },
+    ],
+  },
+  {
+    id: "studio-session",
+    label: "Studio Session",
+    tone: "tone-dark3",
+    cover_image: "images/lookbook/studio-session-cover.jpg",
+    category_no: 1,
+    description: "군더더기 없는 스튜디오 조명 아래, 안경 하나하나의 라인을 담았습니다.",
+    photos: [
+      { image: "images/lookbook/studio-session-1.jpg", tone: "tone-dark3", size: "full" },
+      { image: "images/lookbook/studio-session-2.jpg", tone: "tone-light1", size: "half" },
+      { image: "images/lookbook/studio-session-3.jpg", tone: "tone-dark2", size: "half" },
+      { image: "images/lookbook/studio-session-4.jpg", tone: "tone-dark1", size: "full" },
+      { image: "images/lookbook/studio-session-5.jpg", tone: "tone-dark3", size: "half" },
+      { image: "images/lookbook/studio-session-6.jpg", tone: "tone-light1", size: "half" },
+    ],
+  },
+  {
+    id: "off-duty",
+    label: "Off-Duty",
+    tone: "tone-light1",
+    cover_image: "images/lookbook/off-duty-cover.jpg",
+    category_no: 2,
+    description: "주말의 표정을 위한 선글라스. 힘을 뺀 캐주얼한 룩을 제안합니다.",
+    photos: [
+      { image: "images/lookbook/off-duty-1.jpg", tone: "tone-light1", size: "full" },
+      { image: "images/lookbook/off-duty-2.jpg", tone: "tone-dark1", size: "half" },
+      { image: "images/lookbook/off-duty-3.jpg", tone: "tone-dark3", size: "half" },
+      { image: "images/lookbook/off-duty-4.jpg", tone: "tone-dark2", size: "full" },
+      { image: "images/lookbook/off-duty-5.jpg", tone: "tone-light1", size: "half" },
+      { image: "images/lookbook/off-duty-6.jpg", tone: "tone-dark1", size: "half" },
+    ],
+  },
+  {
+    id: "portrait",
+    label: "Portrait",
+    tone: "tone-dark1",
+    cover_image: "images/lookbook/portrait-cover.jpg",
+    category_no: null,
+    description: "얼굴과 프레임이 만나는 방식. 인물 중심으로 담은 aeido의 표정들.",
+    photos: [
+      { image: "images/lookbook/portrait-1.jpg", tone: "tone-dark1", size: "full" },
+      { image: "images/lookbook/portrait-2.jpg", tone: "tone-dark3", size: "half" },
+      { image: "images/lookbook/portrait-3.jpg", tone: "tone-light1", size: "half" },
+      { image: "images/lookbook/portrait-4.jpg", tone: "tone-dark2", size: "full" },
+      { image: "images/lookbook/portrait-5.jpg", tone: "tone-dark1", size: "half" },
+      { image: "images/lookbook/portrait-6.jpg", tone: "tone-dark3", size: "half" },
+    ],
+  },
+  {
+    id: "campaign-05",
+    label: "Campaign 05",
+    tone: "tone-dark2",
+    cover_image: "images/lookbook/campaign-05-cover.jpg",
+    category_no: null,
+    description: "다섯 번째 캠페인. aeido가 이번 시즌 전하고 싶은 이야기를 담았습니다.",
+    photos: [
+      { image: "images/lookbook/campaign-05-1.jpg", tone: "tone-dark2", size: "full" },
+      { image: "images/lookbook/campaign-05-2.jpg", tone: "tone-light1", size: "half" },
+      { image: "images/lookbook/campaign-05-3.jpg", tone: "tone-dark3", size: "half" },
+      { image: "images/lookbook/campaign-05-4.jpg", tone: "tone-dark1", size: "full" },
+      { image: "images/lookbook/campaign-05-5.jpg", tone: "tone-dark2", size: "half" },
+      { image: "images/lookbook/campaign-05-6.jpg", tone: "tone-light1", size: "half" },
+    ],
+  },
 ];

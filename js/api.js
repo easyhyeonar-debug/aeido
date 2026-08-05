@@ -73,4 +73,9 @@ const api = {
   async getLookbook() {
     return Promise.resolve(LOOKBOOK);
   },
+
+  async getLookbookItem(id) {
+    const item = LOOKBOOK.find((l) => l.id === id);
+    return Promise.resolve(item || null);
+  },
 };

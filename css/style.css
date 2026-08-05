@@ -32,6 +32,15 @@ a { color: inherit; text-decoration: none; }
 button { font-family: inherit; }
 img { max-width: 100%; display: block; }
 
+/* fade + rise into place as an element scrolls into view — paired
+   with initScrollReveal() in helpers.js */
+.reveal-on-scroll {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.reveal-on-scroll.is-visible { opacity: 1; transform: translateY(0); }
+
 /* ==========================================================
    Page frame — one bordered box, sections divided by hairlines
    ========================================================== */
@@ -247,12 +256,17 @@ img { max-width: 100%; display: block; }
 }
 .lookbook-tile {
   position: relative;
+  display: block;
   height: 600px;
   border-right: 1px solid var(--ink);
   background-size: cover;
   background-position: center;
+  background-color: #d8d3c8; /* fallback swatch while the placeholder tone/photo loads */
   overflow: hidden;
 }
+a.lookbook-tile { cursor: pointer; }
+a.lookbook-tile .lookbook-caption { transition: opacity 0.15s ease; }
+a.lookbook-tile:hover .lookbook-caption { opacity: 0.6; }
 .lookbook-grid > .lookbook-tile:last-child { border-right: none; }
 .lookbook-caption {
   position: absolute;
@@ -270,6 +284,9 @@ img { max-width: 100%; display: block; }
 .tone-dark2 .lookbook-caption,
 .tone-dark3 .lookbook-caption { color: #fff; }
 .tone-light1 .lookbook-caption { color: var(--ink); }
+/* the lookbook-detail hero reuses .hero/.hero-headline directly and
+   gets its tone class straight on .hero — same light-background fix */
+.hero.tone-light1 .hero-headline { color: var(--ink); }
 
 @media (max-width: 860px) {
   .lookbook-grid { grid-template-columns: repeat(2, 1fr); }
@@ -280,6 +297,36 @@ img { max-width: 100%; display: block; }
   .lookbook-grid { grid-template-columns: 1fr; }
   .lookbook-tile { border-right: none !important; border-bottom: 1px solid var(--ink); }
   .lookbook-grid > .lookbook-tile:last-child { border-bottom: none; }
+}
+
+/* ==========================================================
+   Lookbook detail — magazine-style editorial photo spread.
+   .lb-hero/.lb-intro reuse .hero/.vision as-is (same cover-photo +
+   caption, same intro-copy treatment as the rest of the site).
+   The grid's 1px gap is filled by the container's ink background,
+   giving a hairline between every cell — including where a "full"
+   photo interrupts a row — without fragile nth-child border rules.
+   ========================================================== */
+.lb-editorial {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1px;
+  background: var(--ink);
+  border-bottom: 2px solid var(--ink);
+}
+.lb-photo {
+  position: relative;
+  height: 480px;
+  background-size: cover;
+  background-position: center;
+  background-color: #d8d3c8;
+  overflow: hidden;
+}
+.lb-photo--full { grid-column: 1 / -1; height: 640px; }
+
+@media (max-width: 860px) {
+  .lb-editorial { grid-template-columns: 1fr; }
+  .lb-photo, .lb-photo--full { height: 420px; grid-column: 1 / -1; }
 }
 
 /* ==========================================================
@@ -309,6 +356,12 @@ img { max-width: 100%; display: block; }
 .product-photo img { width: 100%; height: 100%; object-fit: cover; }
 .product-photo svg { transition: transform 0.2s ease; }
 .product-cell:hover .product-photo svg { transform: scale(1.05); }
+
+/* products.html only (GLASSES/SUNGLASSES/ALL) — square product photos.
+   Home's "Selected" grid and the product-detail "you may also like"
+   grid reuse the same .product-grid/.product-photo markup but don't
+   get this class, so they keep the shorter fixed-height crop. */
+.product-grid--square .product-photo { height: auto; aspect-ratio: 1 / 1; }
 
 .product-info {
   display: flex;
@@ -428,11 +481,7 @@ img { max-width: 100%; display: block; }
 }
 .pd-shot {
   border-bottom: 1px solid var(--ink);
-  opacity: 0;
-  transform: translateY(28px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
 }
-.pd-shot.is-visible { opacity: 1; transform: translateY(0); }
 .pd-gallery > .pd-shot:last-child { border-bottom: none; }
 .pd-shot-caption { padding: 16px 20px 0; font-size: 12px; font-weight: 600; }
 .pd-shot-photo {

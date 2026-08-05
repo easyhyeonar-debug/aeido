@@ -49,14 +49,14 @@ function renderGallery(p) {
   const gallery = document.getElementById("pd-gallery");
 
   const mainShot = `
-    <div class="pd-shot pd-shot-main">
+    <div class="pd-shot pd-shot-main reveal-on-scroll">
       <div class="pd-shot-photo" id="detail-photo"></div>
     </div>`;
 
   const detailShots = (p.detail_shots || [])
     .map(
       (shot) => `
-      <div class="pd-shot pd-shot-detail">
+      <div class="pd-shot pd-shot-detail reveal-on-scroll">
         <div class="pd-shot-caption">${shot.caption}</div>
         <div class="pd-shot-photo" data-shape="${shot.shape_key}"></div>
       </div>`
@@ -78,33 +78,7 @@ function renderGallery(p) {
     renderProductArt(el, el.dataset.shape, false);
   });
 
-  initGalleryReveal(gallery);
-}
-
-/*
-  initGalleryReveal — fades/rises each shot into place as it enters the
-  viewport while scrolling, instead of everything just being visible on
-  load. Purely a polish detail; falls back to instantly visible if
-  IntersectionObserver isn't available.
-*/
-function initGalleryReveal(gallery) {
-  const shots = gallery.querySelectorAll(".pd-shot");
-  if (!("IntersectionObserver" in window)) {
-    shots.forEach((el) => el.classList.add("is-visible"));
-    return;
-  }
-  const io = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("is-visible");
-          io.unobserve(entry.target);
-        }
-      });
-    },
-    { threshold: 0.15, rootMargin: "0px 0px -60px 0px" }
-  );
-  shots.forEach((el) => io.observe(el));
+  initScrollReveal(gallery.querySelectorAll(".pd-shot"));
 }
 
 /*

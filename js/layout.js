@@ -21,7 +21,7 @@ function renderHeader() {
     <button class="nav-toggle" id="nav-toggle" aria-label="메뉴 열기">${ICON_MENU}</button>
     <nav class="site-nav" id="site-nav">
       <a href="index.html" class="${page === "home" ? "active" : ""}">HOME</a>
-      <a href="index.html#lookbook">LOOKBOOK</a>
+      <a href="lookbook.html" class="${page === "lookbook" ? "active" : ""}">LOOKBOOK</a>
       <a href="products.html?category=1" class="${page === "glasses" ? "active" : ""}">GLASSES</a>
       <a href="products.html?category=2" class="${page === "sunglasses" ? "active" : ""}">SUNGLASSES</a>
     </nav>
@@ -114,7 +114,7 @@ function renderFooter() {
         <div class="footer-col-title">SHOP</div>
         <a href="products.html?category=1">GLASSES</a><br>
         <a href="products.html?category=2">SUNGLASSES</a><br>
-        <a href="index.html#lookbook">LOOKBOOK</a>
+        <a href="lookbook.html">LOOKBOOK</a>
       </div>
       <div class="footer-col footer-links">
         <div class="footer-col-title">ABOUT</div>
