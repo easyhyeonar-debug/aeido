@@ -61,12 +61,29 @@ function renderHeader() {
   even though renderHeader() itself can run more than once per page.
 */
 let headerScrollBound = false;
+let headerHeightObserver = null;
 function initHeaderScroll(header) {
   const setHeaderHeight = () => {
     document.documentElement.style.setProperty("--header-h", header.offsetHeight + "px");
   };
   setHeaderHeight();
-  window.addEventListener("resize", setHeaderHeight);
+  // ResizeObserver instead of a window "resize" listener — it catches
+  // every reason the header's own box height can change (viewport
+  // resize, orientation change, the mobile menu toggling, fonts
+  // finishing load), not just a window-level resize event.
+  if (!headerHeightObserver && "ResizeObserver" in window) {
+    headerHeightObserver = new ResizeObserver(setHeaderHeight);
+    headerHeightObserver.observe(header);
+  }
+  // Belt-and-suspenders: the web fonts (Pretendard/Montserrat) can
+  // finish loading after the header's first paint and swap in with
+  // slightly different metrics, changing its height. ResizeObserver
+  // should already catch that reflow, but explicitly re-measuring once
+  // fonts are ready closes any gap — this is what was letting the
+  // breadcrumb sit a few px under the header on some pages.
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(setHeaderHeight);
+  }
 
   if (headerScrollBound) return;
   headerScrollBound = true;
