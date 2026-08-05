@@ -42,6 +42,63 @@ function renderHeader() {
   }
 
   if (typeof cart !== "undefined") cart._updateBadge();
+
+  initHeaderScroll(el);
+}
+
+/*
+  initHeaderScroll — the header is `position: fixed`, so:
+  1) it publishes its real height as --header-h so `body` can pad itself
+     out of the way (a page-load fallback covers the instant before this
+     runs), and
+  2) it hides itself on scroll-down and reappears on scroll-up, so it
+     doesn't permanently eat screen space on the long product-detail
+     page but is always one upward scroll away.
+  product.js re-renders the header after it resolves the page's active
+  category, so this only wires up the scroll listener once (headerScrollBound)
+  even though renderHeader() itself can run more than once per page.
+*/
+let headerScrollBound = false;
+function initHeaderScroll(header) {
+  const setHeaderHeight = () => {
+    document.documentElement.style.setProperty("--header-h", header.offsetHeight + "px");
+  };
+  setHeaderHeight();
+  window.addEventListener("resize", setHeaderHeight);
+
+  if (headerScrollBound) return;
+  headerScrollBound = true;
+
+  let lastY = window.scrollY;
+  let ticking = false;
+
+  function update() {
+    const y = window.scrollY;
+    const nav = document.getElementById("site-nav");
+    const menuOpen = nav && nav.classList.contains("open");
+    if (!menuOpen) {
+      if (y <= header.offsetHeight) {
+        header.classList.remove("header-hidden");
+      } else if (y > lastY + 4) {
+        header.classList.add("header-hidden");
+      } else if (y < lastY - 4) {
+        header.classList.remove("header-hidden");
+      }
+    }
+    lastY = y;
+    ticking = false;
+  }
+
+  window.addEventListener(
+    "scroll",
+    () => {
+      if (!ticking) {
+        requestAnimationFrame(update);
+        ticking = true;
+      }
+    },
+    { passive: true }
+  );
 }
 
 function renderFooter() {
