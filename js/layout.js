@@ -17,21 +17,23 @@ function renderHeader() {
   const page = document.body.dataset.page || "";
 
   el.innerHTML = `
-    <a href="index.html" class="logo">Aeido</a>
-    <button class="nav-toggle" id="nav-toggle" aria-label="메뉴 열기">${ICON_MENU}</button>
-    <nav class="site-nav" id="site-nav">
-      <a href="index.html" class="${page === "home" ? "active" : ""}">HOME</a>
-      <a href="lookbook.html" class="${page === "lookbook" ? "active" : ""}">LOOKBOOK</a>
-      <a href="products.html?category=1" class="${page === "glasses" ? "active" : ""}">GLASSES</a>
-      <a href="products.html?category=2" class="${page === "sunglasses" ? "active" : ""}">SUNGLASSES</a>
-    </nav>
-    <div class="header-icons">
-      <a href="products.html" aria-label="검색">${ICON_SEARCH}</a>
-      <a href="mypage.html" aria-label="마이페이지">${ICON_USER}</a>
-      <a href="cart.html" aria-label="장바구니" style="position:relative;">
-        ${ICON_BAG}
-        <span class="cart-count" data-cart-count>0</span>
-      </a>
+    <div class="site-header-inner">
+      <a href="index.html" class="logo">Aeido</a>
+      <button class="nav-toggle" id="nav-toggle" aria-label="메뉴 열기">${ICON_MENU}</button>
+      <nav class="site-nav" id="site-nav">
+        <a href="index.html" class="${page === "home" ? "active" : ""}">HOME</a>
+        <a href="lookbook.html" class="${page === "lookbook" ? "active" : ""}">LOOKBOOK</a>
+        <a href="products.html?category=1" class="${page === "glasses" ? "active" : ""}">GLASSES</a>
+        <a href="products.html?category=2" class="${page === "sunglasses" ? "active" : ""}">SUNGLASSES</a>
+      </nav>
+      <div class="header-icons">
+        <a href="products.html" aria-label="검색">${ICON_SEARCH}</a>
+        <a href="mypage.html" aria-label="마이페이지">${ICON_USER}</a>
+        <a href="cart.html" aria-label="장바구니" style="position:relative;">
+          ${ICON_BAG}
+          <span class="cart-count" data-cart-count>0</span>
+        </a>
+      </div>
     </div>
   `;
 
@@ -59,12 +61,29 @@ function renderHeader() {
   even though renderHeader() itself can run more than once per page.
 */
 let headerScrollBound = false;
+let headerHeightObserver = null;
 function initHeaderScroll(header) {
   const setHeaderHeight = () => {
     document.documentElement.style.setProperty("--header-h", header.offsetHeight + "px");
   };
   setHeaderHeight();
-  window.addEventListener("resize", setHeaderHeight);
+  // ResizeObserver instead of a window "resize" listener — it catches
+  // every reason the header's own box height can change (viewport
+  // resize, orientation change, the mobile menu toggling, fonts
+  // finishing load), not just a window-level resize event.
+  if (!headerHeightObserver && "ResizeObserver" in window) {
+    headerHeightObserver = new ResizeObserver(setHeaderHeight);
+    headerHeightObserver.observe(header);
+  }
+  // Belt-and-suspenders: the web fonts (Pretendard/Montserrat) can
+  // finish loading after the header's first paint and swap in with
+  // slightly different metrics, changing its height. ResizeObserver
+  // should already catch that reflow, but explicitly re-measuring once
+  // fonts are ready closes any gap — this is what was letting the
+  // breadcrumb sit a few px under the header on some pages.
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(setHeaderHeight);
+  }
 
   if (headerScrollBound) return;
   headerScrollBound = true;
