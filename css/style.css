@@ -68,16 +68,27 @@ img { max-width: 100%; display: block; }
   left: 0;
   right: 0;
   z-index: 100;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 18px 24px;
+  padding: 18px 0;
   background: var(--bg);
   border-bottom: 2px solid var(--ink);
   transform: translateY(0);
   transition: transform 0.3s ease;
 }
 .site-header.header-hidden { transform: translateY(-100%); }
+/* same width/centering formula as .frame, so the logo and icons line
+   up with the page content's left/right edges on every page instead
+   of sitting at a flat edge-to-edge padding */
+.site-header-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: calc(100% - 144px);
+  max-width: 1600px;
+  margin: 0 auto;
+}
+@media (max-width: 700px) {
+  .site-header-inner { width: calc(100% - 32px); }
+}
 .logo {
   font-family: var(--font-en);
   font-weight: 700;

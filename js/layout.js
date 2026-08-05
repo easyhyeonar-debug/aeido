@@ -17,21 +17,23 @@ function renderHeader() {
   const page = document.body.dataset.page || "";
 
   el.innerHTML = `
-    <a href="index.html" class="logo">Aeido</a>
-    <button class="nav-toggle" id="nav-toggle" aria-label="메뉴 열기">${ICON_MENU}</button>
-    <nav class="site-nav" id="site-nav">
-      <a href="index.html" class="${page === "home" ? "active" : ""}">HOME</a>
-      <a href="lookbook.html" class="${page === "lookbook" ? "active" : ""}">LOOKBOOK</a>
-      <a href="products.html?category=1" class="${page === "glasses" ? "active" : ""}">GLASSES</a>
-      <a href="products.html?category=2" class="${page === "sunglasses" ? "active" : ""}">SUNGLASSES</a>
-    </nav>
-    <div class="header-icons">
-      <a href="products.html" aria-label="검색">${ICON_SEARCH}</a>
-      <a href="mypage.html" aria-label="마이페이지">${ICON_USER}</a>
-      <a href="cart.html" aria-label="장바구니" style="position:relative;">
-        ${ICON_BAG}
-        <span class="cart-count" data-cart-count>0</span>
-      </a>
+    <div class="site-header-inner">
+      <a href="index.html" class="logo">Aeido</a>
+      <button class="nav-toggle" id="nav-toggle" aria-label="메뉴 열기">${ICON_MENU}</button>
+      <nav class="site-nav" id="site-nav">
+        <a href="index.html" class="${page === "home" ? "active" : ""}">HOME</a>
+        <a href="lookbook.html" class="${page === "lookbook" ? "active" : ""}">LOOKBOOK</a>
+        <a href="products.html?category=1" class="${page === "glasses" ? "active" : ""}">GLASSES</a>
+        <a href="products.html?category=2" class="${page === "sunglasses" ? "active" : ""}">SUNGLASSES</a>
+      </nav>
+      <div class="header-icons">
+        <a href="products.html" aria-label="검색">${ICON_SEARCH}</a>
+        <a href="mypage.html" aria-label="마이페이지">${ICON_USER}</a>
+        <a href="cart.html" aria-label="장바구니" style="position:relative;">
+          ${ICON_BAG}
+          <span class="cart-count" data-cart-count>0</span>
+        </a>
+      </div>
     </div>
   `;
 
