@@ -130,7 +130,17 @@ function renderFooter() {
     <div class="site-footer">
       <div class="footer-col">
         <div class="footer-brand-name">Aeido</div>
-        <div class="footer-brand-desc">형태가 기능이 되는<br>안경을 만듭니다.</div>
+        <!-- TODO: placeholder business info — swap in the real registered
+             details (사업자등록번호/통신판매업신고/주소/대표자 등) before launch -->
+        <div class="footer-brand-desc">
+          상호 aeido(에이도)<br>
+          대표 OOO<br>
+          사업자등록번호 000-00-00000<br>
+          통신판매업신고 제2026-서울강남-0000호<br>
+          주소 서울특별시 강남구 테헤란로 000, 0층<br>
+          이메일 hello@aeido.co.kr<br>
+          고객센터 02-0000-0000 (평일 10:00–18:00)
+        </div>
       </div>
       <div class="footer-links-group">
         <div class="footer-col footer-links">
@@ -149,12 +159,6 @@ function renderFooter() {
           <a href="#" target="_blank" rel="noopener">INSTAGRAM</a>
         </div>
       </div>
-    </div>
-    <!-- TODO: placeholder business info — swap in the real registered
-         details (사업자등록번호/통신판매업신고/주소/대표자 등) before launch -->
-    <div class="footer-legal">
-      상호 aeido(에이도) · 대표 OOO · 사업자등록번호 000-00-00000 · 통신판매업신고 제2026-서울강남-0000호<br>
-      주소 서울특별시 강남구 테헤란로 000, 0층 · 이메일 hello@aeido.co.kr · 고객센터 02-0000-0000 (평일 10:00–18:00)
     </div>
   `;
 }

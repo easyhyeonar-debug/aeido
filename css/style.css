@@ -882,15 +882,6 @@ a.lookbook-tile:hover .lookbook-caption { opacity: 0.6; }
 }
 .footer-links a:hover { color: var(--ink); }
 
-/* business registration info — bottom-most strip of the footer */
-.footer-legal {
-  padding: 16px 24px 22px;
-  border-top: 1px solid var(--line-soft);
-  font-size: 11px;
-  line-height: 1.8;
-  color: var(--muted-2);
-}
-
 @media (max-width: 700px) {
   .footer-links-group { gap: 8px 32px; }
 }
