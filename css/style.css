@@ -187,7 +187,16 @@ body[data-page="lookbook"] .frame { border-top: none; }
   padding: 0;
 }
 
+/* search/mypage/cart as plain text — only shown inside the mobile nav
+   dropdown; the icon row (.header-icons) covers this on desktop */
+.mobile-only-link { display: none; }
+
 @media (max-width: 760px) {
+  /* logo stays left, hamburger sits on the right (its natural DOM
+     order, second child) now that .header-icons is hidden and no
+     longer needs to be pushed out of the way */
+  .header-icons { display: none; }
+  .mobile-only-link { display: block; }
   .site-nav {
     display: none;
     position: absolute;
@@ -202,7 +211,7 @@ body[data-page="lookbook"] .frame { border-top: none; }
     z-index: 20;
   }
   .site-nav.open { display: flex; }
-  .nav-toggle { display: block; order: -1; }
+  .nav-toggle { display: block; }
 }
 
 /* ==========================================================
@@ -298,6 +307,11 @@ body[data-page="lookbook"] .frame { border-top: none; }
 .frame:has(.lookbook-header) { margin-top: 24px; }
 .lookbook-header .section-title { font-size: 24px; }
 .lookbook-header { padding-bottom: 30px; } /* + 2px border = 32px to the grid below */
+@media (max-width: 700px) {
+  /* mobile only — tuck it in even tighter: 16px under the nav, 16px from the left */
+  .frame:has(.lookbook-header) { margin-top: 16px; }
+  .lookbook-header { padding-left: 16px; padding-right: 16px; }
+}
 
 /* ==========================================================
    our vision
@@ -313,6 +327,11 @@ body[data-page="lookbook"] .frame { border-top: none; }
   line-height: 1.3;
   margin-top: 8px;
   max-width: 640px;
+}
+@media (max-width: 600px) {
+  /* small enough to keep "보이는 것 너머, 본질을 담다" on one line at
+     phone widths instead of wrapping to two */
+  .vision-headline { font-size: 20px; white-space: nowrap; }
 }
 .vision-text {
   font-size: 12px;
@@ -373,6 +392,26 @@ a.lookbook-tile:hover .lookbook-caption { opacity: 0.6; }
   .lookbook-grid { grid-template-columns: 1fr; }
   .lookbook-tile { border-right: none !important; border-bottom: 1px solid var(--ink); }
   .lookbook-grid > .lookbook-tile:last-child { border-bottom: none; }
+
+  /* home's teaser only — horizontal-scrolling carousel instead of
+     stacking tiles full-width. lookbook.html keeps the normal stack. */
+  body[data-page="home"] .lookbook-grid {
+    display: flex;
+    grid-template-columns: unset;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+  body[data-page="home"] .lookbook-tile {
+    flex: 0 0 82%;
+    scroll-snap-align: start;
+    border-right: 1px solid var(--ink) !important;
+    border-bottom: none;
+  }
+  body[data-page="home"] .lookbook-grid > .lookbook-tile:last-child {
+    border-right: none !important;
+    border-bottom: none;
+  }
 }
 
 /* ==========================================================
@@ -467,6 +506,12 @@ a.lookbook-tile:hover .lookbook-caption { opacity: 0.6; }
   .product-grid { grid-template-columns: 1fr; }
   .product-grid > .product-cell { border-right: none !important; }
   .product-photo { height: 200px; }
+  /* home's "Selected" grid stays 2-up even at phone widths, instead
+     of collapsing to a single column like the other product grids */
+  #selected-grid.product-grid { grid-template-columns: repeat(2, 1fr); }
+  #selected-grid .product-cell:nth-child(odd) { border-right: 1px solid var(--ink) !important; }
+  #selected-grid .product-cell:nth-child(even) { border-right: none !important; }
+  #selected-grid .product-photo { height: 150px; }
 }
 
 /* ==========================================================
@@ -807,10 +852,19 @@ a.lookbook-tile:hover .lookbook-caption { opacity: 0.6; }
    Footer
    ========================================================== */
 .site-footer {
-  display: grid;
-  grid-template-columns: 1.3fr 1fr 1fr 1fr;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 24px;
 }
 .site-footer .footer-col { padding: 22px 24px; }
+/* SHOP/ABOUT/FOLLOW grouped together (tight gap) instead of being
+   stretched evenly across the whole footer width */
+.footer-links-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 56px;
+}
 .footer-brand-name { font-family: var(--font-en); font-weight: 700; font-size: 15px; }
 .footer-brand-desc { font-size: 12px; line-height: 1.8; color: var(--muted); margin-top: 8px; }
 .footer-col-title {
@@ -828,9 +882,15 @@ a.lookbook-tile:hover .lookbook-caption { opacity: 0.6; }
 }
 .footer-links a:hover { color: var(--ink); }
 
-@media (max-width: 700px) {
-  .site-footer { grid-template-columns: 1fr 1fr; }
+/* business registration info — bottom-most strip of the footer */
+.footer-legal {
+  padding: 16px 24px 22px;
+  border-top: 1px solid var(--line-soft);
+  font-size: 11px;
+  line-height: 1.8;
+  color: var(--muted-2);
 }
-@media (max-width: 420px) {
-  .site-footer { grid-template-columns: 1fr; }
+
+@media (max-width: 700px) {
+  .footer-links-group { gap: 8px 32px; }
 }
