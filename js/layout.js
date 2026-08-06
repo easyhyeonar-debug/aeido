@@ -25,6 +25,9 @@ function renderHeader() {
         <a href="lookbook.html" class="${page === "lookbook" ? "active" : ""}">LOOKBOOK</a>
         <a href="products.html?category=1" class="${page === "glasses" ? "active" : ""}">GLASSES</a>
         <a href="products.html?category=2" class="${page === "sunglasses" ? "active" : ""}">SUNGLASSES</a>
+        <a href="products.html" class="mobile-only-link">찾기</a>
+        <a href="mypage.html" class="mobile-only-link">마이페이지</a>
+        <a href="cart.html" class="mobile-only-link">장바구니</a>
       </nav>
       <div class="header-icons">
         <a href="products.html" aria-label="검색">${ICON_SEARCH}</a>
@@ -129,21 +132,29 @@ function renderFooter() {
         <div class="footer-brand-name">Aeido</div>
         <div class="footer-brand-desc">형태가 기능이 되는<br>안경을 만듭니다.</div>
       </div>
-      <div class="footer-col footer-links">
-        <div class="footer-col-title">SHOP</div>
-        <a href="products.html?category=1">GLASSES</a><br>
-        <a href="products.html?category=2">SUNGLASSES</a><br>
-        <a href="lookbook.html">LOOKBOOK</a>
+      <div class="footer-links-group">
+        <div class="footer-col footer-links">
+          <div class="footer-col-title">SHOP</div>
+          <a href="products.html?category=1">GLASSES</a><br>
+          <a href="products.html?category=2">SUNGLASSES</a><br>
+          <a href="lookbook.html">LOOKBOOK</a>
+        </div>
+        <div class="footer-col footer-links">
+          <div class="footer-col-title">ABOUT</div>
+          <a href="#">OUR STORY</a><br>
+          <a href="#">CONTACT</a>
+        </div>
+        <div class="footer-col footer-links">
+          <div class="footer-col-title">FOLLOW</div>
+          <a href="#" target="_blank" rel="noopener">INSTAGRAM</a>
+        </div>
       </div>
-      <div class="footer-col footer-links">
-        <div class="footer-col-title">ABOUT</div>
-        <a href="#">OUR STORY</a><br>
-        <a href="#">CONTACT</a>
-      </div>
-      <div class="footer-col footer-links">
-        <div class="footer-col-title">FOLLOW</div>
-        <a href="#" target="_blank" rel="noopener">INSTAGRAM</a>
-      </div>
+    </div>
+    <!-- TODO: placeholder business info — swap in the real registered
+         details (사업자등록번호/통신판매업신고/주소/대표자 등) before launch -->
+    <div class="footer-legal">
+      상호 aeido(에이도) · 대표 OOO · 사업자등록번호 000-00-00000 · 통신판매업신고 제2026-서울강남-0000호<br>
+      주소 서울특별시 강남구 테헤란로 000, 0층 · 이메일 hello@aeido.co.kr · 고객센터 02-0000-0000 (평일 10:00–18:00)
     </div>
   `;
 }
