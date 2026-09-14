@@ -301,15 +301,18 @@ body[data-page="lookbook"] .frame { border-top: none; }
   color: var(--ink);
   max-width: 480px;
 }
-/* lookbook.html's title only — a tighter 24px gap under the header
-   (vs. the usual 56px), and reads bigger than the plain section-title
-   default since it's carrying a subtitle underneath it */
-.frame:has(.lookbook-header) { margin-top: 24px; }
+/* lookbook.html's hero — same full-bleed, flush-to-header treatment
+   as the home hero (a spot for a future rotating photo/video, same
+   as home's) instead of the usual 56px-margin, bordered-box start */
+.frame:has(.lookbook-hero) { margin-top: 0; border-top: none; }
+
+/* lookbook.html's title only — reads bigger than the plain
+   section-title default since it's carrying a subtitle underneath it,
+   and sits 48px below the hero above it */
 .lookbook-header .section-title { font-size: 24px; }
-.lookbook-header { padding-bottom: 30px; } /* + 2px border = 32px to the grid below */
+.lookbook-header { margin-top: 32px; padding-bottom: 30px; } /* + 16px section-header padding-top = 48px to the "Lookbook" text; + 2px border = 32px to the grid below */
 @media (max-width: 700px) {
-  /* mobile only — tuck it in even tighter: 16px under the nav, 16px from the left */
-  .frame:has(.lookbook-header) { margin-top: 16px; }
+  /* mobile only — tuck it in tighter: 16px from the left */
   .lookbook-header { padding-left: 16px; padding-right: 16px; }
 }
 
